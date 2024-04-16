@@ -17,12 +17,17 @@ class Game {
     this.width = 500;
     this.obstacles = [new Obstacle(this.gameScreen)];
     this.score = 0;
-    this.lives = 3;
+    this.lives = 1;
     this.gameIsOver = false;
     this.gameIntervalId = null;
     this.gameLoopFrequency = Math.round(1000 / 60);
     //this is for adding an obstacle every couple seconds
     this.counter = 1;
+    //this is the sound section
+    this.honk = new Audio("../sounds/honk.wav");
+    this.honk.volume = 0.1;
+    //this is an example name
+    this.playerName = "Ragnar";
   }
   start() {
     this.gameScreen.style.height = `${this.height}px`;
@@ -63,11 +68,15 @@ class Game {
         if (this.lives === 0) {
           this.endGame();
         }
+        //this is where we play the honk when there is a collision
+        this.honk.play();
       }
 
       //this is handling the score if the red car passes
       if (oneObstacle.top > 600) {
+        //remove red car from the array
         this.obstacles.splice(i, 1);
+        //move the for loop back one iteration bc we removed an element from the array
         i--;
         this.score++;
         //removes the image from the page
@@ -81,6 +90,33 @@ class Game {
     if (this.gameIsOver) {
       //If the game is over is true, then we stop the game by clearing the interval
       clearInterval(this.gameIntervalId);
+      //this is where I am adding values to the local storage for high scores
+      //this is to check first if there are any high scores already in the local storage
+      let highScoresFromLS = JSON.parse(localStorage.getItem("highscores"));
+      if (highScoresFromLS) {
+        const newHighScore = { name: this.playerName, score: this.score };
+        //this adds our score to the new array created by JSON.parse
+        highScoresFromLS.push(newHighScore);
+        //after you add your newest score, then you can sort the array highest to lowest
+        highScoresFromLS.sort((a, b) => {
+          if (a.score < b.score) {
+            return 1;
+          } else if (a.score > b.score) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+        //slice out the first 3 elements, if they were highest to lowest then you have your top three scores
+        highScoresFromLS = highScoresFromLS.slice(0, 3);
+        console.log("here are the scores from the ls,", highScoresFromLS);
+        localStorage.setItem("highscores", JSON.stringify(highScoresFromLS));
+      } else {
+        //else is if there were no scores already, so we create the key highscores and add our score
+        //the set Item method needs two arguments, one is the name and the other is the value
+        const newHighScores = [{ name: this.playerName, score: this.score }];
+        localStorage.setItem("highscores", JSON.stringify(newHighScores));
+      }
     }
   }
   update() {

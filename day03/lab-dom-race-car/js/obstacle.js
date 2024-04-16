@@ -1,6 +1,7 @@
 class Obstacle {
   constructor(gameScreen) {
     this.gameScreen = gameScreen;
+    //this is to choose one of two positions for the red car to be in x
     this.possiblePositions = [100, 300];
     this.left =
       this.possiblePositions[

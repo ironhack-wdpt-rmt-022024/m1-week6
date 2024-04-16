@@ -42,6 +42,8 @@ class Player {
       playerRect.top < obstacleRect.bottom &&
       playerRect.bottom > obstacleRect.top
     ) {
+      //this spins the car once when you hit something, and then removes the class so you can hit something else
+
       this.element.classList.add("spin");
       setTimeout(() => {
         this.element.classList.remove("spin");

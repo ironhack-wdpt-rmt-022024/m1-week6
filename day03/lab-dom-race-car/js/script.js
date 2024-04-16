@@ -7,11 +7,14 @@ window.onload = function () {
     startGame();
   });
   restartButton.addEventListener("click", () => {
+    //Erics' lazy way
     // location.reload();
+    //the right way
     myGame = new Game();
     startGame();
   });
   //this is for keyboard events, when you press a key
+  //******************to move your player******************
   document.addEventListener("keydown", (event) => {
     event.preventDefault();
     if (event.code === "ArrowUp") {
@@ -28,6 +31,7 @@ window.onload = function () {
       myGame.player.directionX = -3;
     }
   });
+  //this is to stop your player
   document.addEventListener("keyup", () => {
     myGame.player.directionY = 0;
     myGame.player.directionX = 0;
